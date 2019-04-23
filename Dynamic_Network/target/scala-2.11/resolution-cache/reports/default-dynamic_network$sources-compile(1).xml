@@ -7,7 +7,7 @@
 		revision="0.1"
 		conf="compile"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool"
-		date="20190410003229"/>
+		date="20190419105001"/>
 	<dependencies>
 		<module organisation="net.sf.jung" name="jung-io">
 			<revision name="2.0.1" status="release" pubdate="20100124122029" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jung.sourceforge.net/site/jung-io" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="179">
@@ -63,7 +63,7 @@
 				<metadata-artifact status="no" details="" size="84293" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-sql_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-sql_2.11/2.4.0/spark-sql_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-sql_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="1193024" time="398" location="/root/.ivy2/cache/org.apache.spark/spark-sql_2.11/srcs/spark-sql_2.11-2.4.0-sources.jar">
+					<artifact name="spark-sql_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="1193024" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-sql_2.11/srcs/spark-sql_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-sql_2.11/2.4.0/spark-sql_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -423,7 +423,7 @@
 				<metadata-artifact status="no" details="" size="80740" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-catalyst_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-catalyst_2.11/2.4.0/spark-catalyst_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-catalyst_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="1035489" time="207" location="/root/.ivy2/cache/org.apache.spark/spark-catalyst_2.11/srcs/spark-catalyst_2.11-2.4.0-sources.jar">
+					<artifact name="spark-catalyst_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="1035489" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-catalyst_2.11/srcs/spark-catalyst_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-catalyst_2.11/2.4.0/spark-catalyst_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -459,7 +459,7 @@
 				<metadata-artifact status="no" details="" size="78092" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-sketch_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-sketch_2.11/2.4.0/spark-sketch_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-sketch_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="24718" time="173" location="/root/.ivy2/cache/org.apache.spark/spark-sketch_2.11/srcs/spark-sketch_2.11-2.4.0-sources.jar">
+					<artifact name="spark-sketch_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="24718" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-sketch_2.11/srcs/spark-sketch_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-sketch_2.11/2.4.0/spark-sketch_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -471,7 +471,7 @@
 				<metadata-artifact status="no" details="" size="97622" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-core_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-core_2.11/2.4.0/spark-core_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-core_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="1887685" time="431" location="/root/.ivy2/cache/org.apache.spark/spark-core_2.11/srcs/spark-core_2.11-2.4.0-sources.jar">
+					<artifact name="spark-core_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="1887685" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-core_2.11/srcs/spark-core_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-core_2.11/2.4.0/spark-core_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -651,7 +651,7 @@
 				<metadata-artifact status="no" details="" size="79284" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-unsafe_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-unsafe_2.11/2.4.0/spark-unsafe_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-unsafe_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="43066" time="184" location="/root/.ivy2/cache/org.apache.spark/spark-unsafe_2.11/srcs/spark-unsafe_2.11-2.4.0-sources.jar">
+					<artifact name="spark-unsafe_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="43066" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-unsafe_2.11/srcs/spark-unsafe_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-unsafe_2.11/2.4.0/spark-unsafe_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -663,7 +663,7 @@
 				<metadata-artifact status="no" details="" size="79521" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-network-shuffle_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-network-shuffle_2.11/2.4.0/spark-network-shuffle_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-network-shuffle_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="49825" time="161" location="/root/.ivy2/cache/org.apache.spark/spark-network-shuffle_2.11/srcs/spark-network-shuffle_2.11-2.4.0-sources.jar">
+					<artifact name="spark-network-shuffle_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="49825" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-network-shuffle_2.11/srcs/spark-network-shuffle_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-network-shuffle_2.11/2.4.0/spark-network-shuffle_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -675,7 +675,7 @@
 				<metadata-artifact status="no" details="" size="80303" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-network-common_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-network-common_2.11/2.4.0/spark-network-common_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-network-common_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="141175" time="180" location="/root/.ivy2/cache/org.apache.spark/spark-network-common_2.11/srcs/spark-network-common_2.11-2.4.0-sources.jar">
+					<artifact name="spark-network-common_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="141175" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-network-common_2.11/srcs/spark-network-common_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-network-common_2.11/2.4.0/spark-network-common_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -723,7 +723,7 @@
 				<metadata-artifact status="no" details="" size="81066" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-launcher_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-launcher_2.11/2.4.0/spark-launcher_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-launcher_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="55292" time="164" location="/root/.ivy2/cache/org.apache.spark/spark-launcher_2.11/srcs/spark-launcher_2.11-2.4.0-sources.jar">
+					<artifact name="spark-launcher_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="55292" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-launcher_2.11/srcs/spark-launcher_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-launcher_2.11/2.4.0/spark-launcher_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -867,7 +867,7 @@
 				<metadata-artifact status="no" details="" size="3176" time="0" location="/root/.ivy2/cache/com.twitter/chill_2.11/ivy-0.9.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/twitter/chill_2.11/0.9.3/chill_2.11-0.9.3.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="0.9.3" rev-constraint-default="0.9.3" rev-constraint-dynamic="0.9.3" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="chill_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="37928" time="159" location="/root/.ivy2/cache/com.twitter/chill_2.11/srcs/chill_2.11-0.9.3-sources.jar">
+					<artifact name="chill_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="37928" time="0" location="/root/.ivy2/cache/com.twitter/chill_2.11/srcs/chill_2.11-0.9.3-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/twitter/chill_2.11/0.9.3/chill_2.11-0.9.3-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -939,7 +939,7 @@
 				<metadata-artifact status="no" details="" size="2930" time="0" location="/root/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/ivy-1.1.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.1.0/scala-parser-combinators_2.11-1.1.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="1.1.0" rev-constraint-default="1.1.0" rev-constraint-dynamic="1.1.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="scala-parser-combinators_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="46980" time="179" location="/root/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/srcs/scala-parser-combinators_2.11-1.1.0-sources.jar">
+					<artifact name="scala-parser-combinators_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="46980" time="0" location="/root/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/srcs/scala-parser-combinators_2.11-1.1.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.11/1.1.0/scala-parser-combinators_2.11-1.1.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -1011,7 +1011,7 @@
 				<metadata-artifact status="no" details="" size="2967" time="0" location="/root/.ivy2/cache/org.json4s/json4s-jackson_2.11/ivy-3.5.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/json4s/json4s-jackson_2.11/3.5.3/json4s-jackson_2.11-3.5.3.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="3.5.3" rev-constraint-default="3.5.3" rev-constraint-dynamic="3.5.3" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="json4s-jackson_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="7292" time="175" location="/root/.ivy2/cache/org.json4s/json4s-jackson_2.11/srcs/json4s-jackson_2.11-3.5.3-sources.jar">
+					<artifact name="json4s-jackson_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="7292" time="0" location="/root/.ivy2/cache/org.json4s/json4s-jackson_2.11/srcs/json4s-jackson_2.11-3.5.3-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/json4s/json4s-jackson_2.11/3.5.3/json4s-jackson_2.11-3.5.3-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -1155,7 +1155,7 @@
 				<metadata-artifact status="no" details="" size="3250" time="0" location="/root/.ivy2/cache/org.json4s/json4s-core_2.11/ivy-3.5.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/json4s/json4s-core_2.11/3.5.3/json4s-core_2.11-3.5.3.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="3.5.3" rev-constraint-default="3.5.3" rev-constraint-dynamic="3.5.3" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="json4s-core_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="42957" time="192" location="/root/.ivy2/cache/org.json4s/json4s-core_2.11/srcs/json4s-core_2.11-3.5.3-sources.jar">
+					<artifact name="json4s-core_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="42957" time="0" location="/root/.ivy2/cache/org.json4s/json4s-core_2.11/srcs/json4s-core_2.11-3.5.3-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/json4s/json4s-core_2.11/3.5.3/json4s-core_2.11-3.5.3-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -1167,7 +1167,7 @@
 				<metadata-artifact status="no" details="" size="2658" time="0" location="/root/.ivy2/cache/org.json4s/json4s-scalap_2.11/ivy-3.5.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/json4s/json4s-scalap_2.11/3.5.3/json4s-scalap_2.11-3.5.3.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="3.5.3" rev-constraint-default="3.5.3" rev-constraint-dynamic="3.5.3" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="json4s-scalap_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="18581" time="172" location="/root/.ivy2/cache/org.json4s/json4s-scalap_2.11/srcs/json4s-scalap_2.11-3.5.3-sources.jar">
+					<artifact name="json4s-scalap_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="18581" time="0" location="/root/.ivy2/cache/org.json4s/json4s-scalap_2.11/srcs/json4s-scalap_2.11-3.5.3-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/json4s/json4s-scalap_2.11/3.5.3/json4s-scalap_2.11-3.5.3-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -1179,7 +1179,7 @@
 				<metadata-artifact status="no" details="" size="2649" time="0" location="/root/.ivy2/cache/org.json4s/json4s-ast_2.11/ivy-3.5.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/json4s/json4s-ast_2.11/3.5.3/json4s-ast_2.11-3.5.3.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="3.5.3" rev-constraint-default="3.5.3" rev-constraint-dynamic="3.5.3" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="json4s-ast_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="6972" time="161" location="/root/.ivy2/cache/org.json4s/json4s-ast_2.11/srcs/json4s-ast_2.11-3.5.3-sources.jar">
+					<artifact name="json4s-ast_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="6972" time="0" location="/root/.ivy2/cache/org.json4s/json4s-ast_2.11/srcs/json4s-ast_2.11-3.5.3-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/json4s/json4s-ast_2.11/3.5.3/json4s-ast_2.11-3.5.3-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -1191,7 +1191,7 @@
 				<metadata-artifact status="no" details="" size="79419" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-kvstore_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-kvstore_2.11/2.4.0/spark-kvstore_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-kvstore_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="34005" time="192" location="/root/.ivy2/cache/org.apache.spark/spark-kvstore_2.11/srcs/spark-kvstore_2.11-2.4.0-sources.jar">
+					<artifact name="spark-kvstore_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="34005" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-kvstore_2.11/srcs/spark-kvstore_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-kvstore_2.11/2.4.0/spark-kvstore_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -1239,7 +1239,7 @@
 				<metadata-artifact status="no" details="" size="77812" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-tags_2.11/ivy-2.4.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/apache/spark/spark-tags_2.11/2.4.0/spark-tags_2.11-2.4.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.4.0" rev-constraint-default="2.4.0" rev-constraint-dynamic="2.4.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spark-tags_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="14785" time="150" location="/root/.ivy2/cache/org.apache.spark/spark-tags_2.11/srcs/spark-tags_2.11-2.4.0-sources.jar">
+					<artifact name="spark-tags_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="14785" time="0" location="/root/.ivy2/cache/org.apache.spark/spark-tags_2.11/srcs/spark-tags_2.11-2.4.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/apache/spark/spark-tags_2.11/2.4.0/spark-tags_2.11-2.4.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -1506,7 +1506,7 @@
 				<metadata-artifact status="no" details="" size="4357" time="0" location="/root/.ivy2/cache/com.fasterxml.jackson.module/jackson-module-scala_2.11/ivy-2.6.7.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/fasterxml/jackson/module/jackson-module-scala_2.11/2.6.7.1/jackson-module-scala_2.11-2.6.7.1.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.6.7.1" rev-constraint-default="2.6.7.1" rev-constraint-dynamic="2.6.7.1" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="jackson-module-scala_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="52620" time="166" location="/root/.ivy2/cache/com.fasterxml.jackson.module/jackson-module-scala_2.11/srcs/jackson-module-scala_2.11-2.6.7.1-sources.jar">
+					<artifact name="jackson-module-scala_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="52620" time="0" location="/root/.ivy2/cache/com.fasterxml.jackson.module/jackson-module-scala_2.11/srcs/jackson-module-scala_2.11-2.6.7.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/fasterxml/jackson/module/jackson-module-scala_2.11/2.6.7.1/jackson-module-scala_2.11-2.6.7.1-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2108,7 +2108,7 @@
 				<metadata-artifact status="no" details="" size="3367" time="0" location="/root/.ivy2/cache/org.scalanlp/breeze-natives_2.11/ivy-0.13.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalanlp/breeze-natives_2.11/0.13.2/breeze-natives_2.11-0.13.2.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="0.13.2" rev-constraint-default="0.13.2" rev-constraint-dynamic="0.13.2" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="breeze-natives_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="255" time="202" location="/root/.ivy2/cache/org.scalanlp/breeze-natives_2.11/srcs/breeze-natives_2.11-0.13.2-sources.jar">
+					<artifact name="breeze-natives_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="255" time="0" location="/root/.ivy2/cache/org.scalanlp/breeze-natives_2.11/srcs/breeze-natives_2.11-0.13.2-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalanlp/breeze-natives_2.11/0.13.2/breeze-natives_2.11-0.13.2-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2120,7 +2120,7 @@
 				<metadata-artifact status="no" details="" size="4830" time="0" location="/root/.ivy2/cache/org.scalanlp/breeze_2.11/ivy-0.13.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalanlp/breeze_2.11/0.13.2/breeze_2.11-0.13.2.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="0.13.2" rev-constraint-default="0.13.2" rev-constraint-dynamic="0.13.2" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="breeze_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="529997" time="296" location="/root/.ivy2/cache/org.scalanlp/breeze_2.11/srcs/breeze_2.11-0.13.2-sources.jar">
+					<artifact name="breeze_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="529997" time="0" location="/root/.ivy2/cache/org.scalanlp/breeze_2.11/srcs/breeze_2.11-0.13.2-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalanlp/breeze_2.11/0.13.2/breeze_2.11-0.13.2-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2132,7 +2132,7 @@
 				<metadata-artifact status="no" details="" size="3137" time="0" location="/root/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/ivy-1.0.6.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-xml_2.11/1.0.6/scala-xml_2.11-1.0.6.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="1.0.6" rev-constraint-default="1.0.6" rev-constraint-dynamic="1.0.6" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="scala-xml_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="109202" time="171" location="/root/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/srcs/scala-xml_2.11-1.0.6-sources.jar">
+					<artifact name="scala-xml_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="109202" time="0" location="/root/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/srcs/scala-xml_2.11-1.0.6-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/modules/scala-xml_2.11/1.0.6/scala-xml_2.11-1.0.6-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2144,7 +2144,7 @@
 				<metadata-artifact status="no" details="" size="3059" time="0" location="/root/.ivy2/cache/org.spire-math/spire_2.11/ivy-0.13.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/spire-math/spire_2.11/0.13.0/spire_2.11-0.13.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="0.13.0" rev-constraint-default="0.13.0" rev-constraint-dynamic="0.13.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spire_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="251335" time="180" location="/root/.ivy2/cache/org.spire-math/spire_2.11/srcs/spire_2.11-0.13.0-sources.jar">
+					<artifact name="spire_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="251335" time="0" location="/root/.ivy2/cache/org.spire-math/spire_2.11/srcs/spire_2.11-0.13.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/spire-math/spire_2.11/0.13.0/spire_2.11-0.13.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2156,7 +2156,7 @@
 				<metadata-artifact status="no" details="" size="3294" time="0" location="/root/.ivy2/cache/org.spire-math/spire-macros_2.11/ivy-0.13.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/spire-math/spire-macros_2.11/0.13.0/spire-macros_2.11-0.13.0.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="0.13.0" rev-constraint-default="0.13.0" rev-constraint-dynamic="0.13.0" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="spire-macros_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="5411" time="146" location="/root/.ivy2/cache/org.spire-math/spire-macros_2.11/srcs/spire-macros_2.11-0.13.0-sources.jar">
+					<artifact name="spire-macros_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="5411" time="0" location="/root/.ivy2/cache/org.spire-math/spire-macros_2.11/srcs/spire-macros_2.11-0.13.0-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/spire-math/spire-macros_2.11/0.13.0/spire-macros_2.11-0.13.0-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2168,7 +2168,7 @@
 				<metadata-artifact status="no" details="" size="3226" time="0" location="/root/.ivy2/cache/com.chuusai/shapeless_2.11/ivy-2.3.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/chuusai/shapeless_2.11/2.3.2/shapeless_2.11-2.3.2.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.3.2" rev-constraint-default="2.3.2" rev-constraint-dynamic="2.3.2" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="shapeless_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="163659" time="181" location="/root/.ivy2/cache/com.chuusai/shapeless_2.11/srcs/shapeless_2.11-2.3.2-sources.jar">
+					<artifact name="shapeless_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="163659" time="0" location="/root/.ivy2/cache/com.chuusai/shapeless_2.11/srcs/shapeless_2.11-2.3.2-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/chuusai/shapeless_2.11/2.3.2/shapeless_2.11-2.3.2-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2180,7 +2180,7 @@
 				<metadata-artifact status="no" details="" size="2964" time="0" location="/root/.ivy2/cache/org.typelevel/macro-compat_2.11/ivy-1.1.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/typelevel/macro-compat_2.11/1.1.1/macro-compat_2.11-1.1.1.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="1.1.1" rev-constraint-default="1.1.1" rev-constraint-dynamic="1.1.1" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="macro-compat_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="1052" time="186" location="/root/.ivy2/cache/org.typelevel/macro-compat_2.11/srcs/macro-compat_2.11-1.1.1-sources.jar">
+					<artifact name="macro-compat_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="1052" time="0" location="/root/.ivy2/cache/org.typelevel/macro-compat_2.11/srcs/macro-compat_2.11-1.1.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/typelevel/macro-compat_2.11/1.1.1/macro-compat_2.11-1.1.1-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2192,7 +2192,7 @@
 				<metadata-artifact status="no" details="" size="2785" time="0" location="/root/.ivy2/cache/org.typelevel/machinist_2.11/ivy-0.6.1.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/typelevel/machinist_2.11/0.6.1/machinist_2.11-0.6.1.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="0.6.1" rev-constraint-default="0.6.1" rev-constraint-dynamic="0.6.1" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="machinist_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="3546" time="187" location="/root/.ivy2/cache/org.typelevel/machinist_2.11/srcs/machinist_2.11-0.6.1-sources.jar">
+					<artifact name="machinist_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="3546" time="0" location="/root/.ivy2/cache/org.typelevel/machinist_2.11/srcs/machinist_2.11-0.6.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/typelevel/machinist_2.11/0.6.1/machinist_2.11-0.6.1-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2254,7 +2254,7 @@
 				<metadata-artifact status="no" details="" size="3152" time="0" location="/root/.ivy2/cache/org.scalanlp/breeze-macros_2.11/ivy-0.13.2.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scalanlp/breeze-macros_2.11/0.13.2/breeze-macros_2.11-0.13.2.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="0.13.2" rev-constraint-default="0.13.2" rev-constraint-dynamic="0.13.2" callerrev="0.1"/>
 				<artifacts>
-					<artifact name="breeze-macros_2.11" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="7975" time="183" location="/root/.ivy2/cache/org.scalanlp/breeze-macros_2.11/srcs/breeze-macros_2.11-0.13.2-sources.jar">
+					<artifact name="breeze-macros_2.11" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="7975" time="0" location="/root/.ivy2/cache/org.scalanlp/breeze-macros_2.11/srcs/breeze-macros_2.11-0.13.2-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scalanlp/breeze-macros_2.11/0.13.2/breeze-macros_2.11-0.13.2-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2266,7 +2266,7 @@
 				<metadata-artifact status="no" details="" size="2825" time="0" location="/root/.ivy2/cache/org.scala-lang/scala-reflect/ivy-2.11.8.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.11.8/scala-reflect-2.11.8.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.11.8" rev-constraint-default="2.11.8" rev-constraint-dynamic="2.11.8" callerrev="0.1" extra-info.apiURL="http://www.scala-lang.org/api/2.11.8/"/>
 				<artifacts>
-					<artifact name="scala-reflect" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="562895" time="187" location="/root/.ivy2/cache/org.scala-lang/scala-reflect/srcs/scala-reflect-2.11.8-sources.jar">
+					<artifact name="scala-reflect" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="562895" time="0" location="/root/.ivy2/cache/org.scala-lang/scala-reflect/srcs/scala-reflect-2.11.8-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.11.8/scala-reflect-2.11.8-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -2278,7 +2278,7 @@
 				<metadata-artifact status="no" details="" size="2653" time="0" location="/root/.ivy2/cache/org.scala-lang/scala-library/ivy-2.11.8.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8.pom"/>
 				<caller organisation="default" name="dynamic_network$sources" conf="compile" rev="2.11.8" rev-constraint-default="2.11.8" rev-constraint-dynamic="2.11.8" callerrev="0.1" extra-info.apiURL="http://www.scala-lang.org/api/2.11.8/"/>
 				<artifacts>
-					<artifact name="scala-library" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="911686" time="615" location="/root/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.11.8-sources.jar">
+					<artifact name="scala-library" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="911686" time="0" location="/root/.ivy2/cache/org.scala-lang/scala-library/srcs/scala-library-2.11.8-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8-sources.jar"/>
 					</artifact>
 				</artifacts>

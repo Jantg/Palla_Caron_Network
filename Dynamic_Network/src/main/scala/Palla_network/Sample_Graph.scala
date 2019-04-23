@@ -20,7 +20,7 @@ object Sample_Graph{
     val niter = 100000
     val data = Source.fromFile("/home/jan/Downloads/temporaledges.txt").getLines.toArray
     val T = data.map(v => v.split(" ")(3).toInt).max
-    val maxtime = 3
+    val maxtime = 7
     val all_states = data.filter(v=>v.split(" ")(3).toInt <(maxtime+1)).map(v => (v.split(" ")(0).toInt, v.split(" ")(1).toInt))
     val nodes = all_states.map(v => Set(v._1, v._2)).reduce(_.union(_)).toList
     val K = nodes.length
@@ -38,43 +38,50 @@ object Sample_Graph{
     //val T = networks.length
     //val K = networks(0).keys.map(_._1).max+1
     var n_t = networks//.slice(0, maxtime)
-    val prior_alpha = new Gamma(0.1, 0.1)
-    val prior_tau = new Gamma(30,0.03)
-    val prior_phi = new Gamma(30,0.03)
-    val delta_alpha = 2.0
+    val prior_alpha = new Gamma(0.01, 1/0.01)
+    val prior_tau = new Gamma(0.01,1/0.01)
+    val prior_phi = new Gamma(0.01,1/0.01)
+    val delta_alpha = 1.0
     val delta_phi = 0.5
-    val delta_tau = 0.1
+    val delta_tau = 0.5
 
     Logger.getLogger("org").setLevel(Level.OFF)
     Logger.getLogger("akka").setLevel(Level.OFF)
     val conf = new SparkConf().setAppName("Sample_Graph").setMaster("local[*]")
     val sc = new SparkContext(conf)
     var sanity_check = networks
-    var phi =2.0
+    var phi =10.0
     var phi_prop = phi
-    var tau = 0.1
+    var tau = 10.0
     var tau_prop = tau
-    var rho = 0.0
+    var rho = Double.PositiveInfinity
     var alpha = 1.0
     var alpha_p = alpha
     var alpha_prop = alpha
-    val L = 4
-    val eps = 1e-5
-    val w_0 = nodes.map(v => (v, nextDouble)).toMap
-    val w_0_ast = nextDouble
+    val L = 10
+    val eps = 1e-3
+    val w_0 = nodes.map(v => (v, 10*nextDouble)).toMap
+    val w_0_ast = nextDouble*10.0
     var iter = 1
     var (w_0T, c_0T) = (0 until n_t.length).foldLeft((Array(w_0), Array.empty[Map[Int, Int]])) { (s, i) => //Array.fill[Map[Int,Int]](T)(nodes.map(v=>(v,0)).toMap)
       print(iter)
       iter = iter + 1
-      val c_t = s._1(i).map(v => (v._1, zpois(phi * v._2)))
+      //val c_t = s._1(i).map(v => (v._1, zpois(phi * nextDouble*5.0)))
+      //val c_t = s._1(i).map(v => (v._1, Poisson(phi * v._2).sample(1)(0)))
+      val c_t = nodes.map(v=>(v, 10)).toMap
       //val c_t = s._1(i).map(v=>(v._1,Poisson(phi*v._2).sample(1)(0)+1))
-      val w_t1 = c_t.map(v => (v._1, Gamma(v._2, tau + phi).sample(1)(0)))
+     //val w_t1 = c_t.map(v =>(v._1, if (v._2 != 0) {Gamma(v._2, 1/(tau + phi)).sample(1)(0)}else{0.0}))
+      val w_t1 = nodes.map(v => (v, 10*nextDouble)).toMap
+     //val w_t1 = c_t.map(v =>(v._1, Gamma(v._2+0.1, 1/(tau + phi)).sample(1)(0)))
+      //val w_t1 = nodes.map(v => (v, 5.0*nextDouble*Binomial(1,0.3).sample(1)(0))).toMap
       (s._1 :+ w_t1, s._2 :+ c_t)
     }
-    c_0T = c_0T :+ w_0T(n_t.length).map(v => (v._1, zpois(phi * v._2)))
+    c_0T = c_0T :+ w_0T(n_t.length).map(v => (v._1, Poisson(phi * v._2).sample(1)(0)))
     var (w_0T_ast, c_0T_ast) = (0 until n_t.length).foldLeft((Array(w_0_ast), Array[Int]())) { (s, i) =>
-      val c_t_ast = Poisson(phi * s._1(i)).sample(1)(0)
-      val w_t1_ast = Gamma(alpha, tau + phi).sample(1)(0)
+      //val c_t_ast = Poisson(phi * s._1(i)).sample(1)(0)
+      val c_t_ast = Poisson(phi * 10.0*nextDouble).sample(1)(0)
+      //val w_t1_ast = Gamma(alpha, tau + phi).sample(1)(0)
+      val w_t1_ast = 10.0*nextDouble
       (s._1 :+ w_t1_ast, s._2 :+ c_t_ast)
     }
     c_0T_ast = c_0T_ast :+ Poisson(phi * w_0T_ast(n_t.length)).sample(1)(0)
@@ -84,15 +91,26 @@ object Sample_Graph{
       for (i <- 0 until n_t.length) {
         printf(i.toString)
         breakable {
-          w_0T(i + 1) = update_wt(n_t(i), w_0T(i + 1), w_0T_ast(i + 1), c_0T(i + 1), c_0T(i), tau, phi, L, eps, sc)
+          w_0T(i + 1) = update_wt(n_t(i), w_0T(i + 1), w_0T_ast(i + 1), c_0T(i + 1), c_0T(i), tau, phi, L, eps, sc,alpha)
           if (i != (n_t.length - 1)) {
-            c_0T(i + 1) = update_ct(n_t(i), n_t(i + 1), w_0T(i + 1), w_0T(i + 2), w_0T_ast(i + 1), w_0T_ast(i + 2), c_0T(i + 1), c_0T(i + 2), c_0T(i), tau, phi, L, eps, sc)
+            print("\n")
+            print(c_0T(i+1).filter(v=>v._2!=0).slice(0,20))
+            val tmp = update_ct(n_t(i), n_t(i + 1), w_0T(i + 1), w_0T(i + 2), w_0T_ast(i + 1), w_0T_ast(i + 2), c_0T(i + 1), c_0T(i + 2), c_0T(i), tau, phi, L, eps, sc)
+            c_0T(i+1) = tmp._1
+            w_0T(i+1) = tmp._2.foldLeft(w_0T(i+1))((s,i)=> s+(i._1->i._2))
+            print("\n")
+            print(c_0T(i+1).filter(v=>v._2!=0).slice(0,20))
+            print("\n")
           }
           for (j <- 0 until n_t.length - 1) {
             if (j != (n_t.length - 2)) {
+              println(c_0T_ast(j+1))
               c_0T_ast(j + 1) = update_c_t_ast(c_0T_ast(j + 1), w_0T_ast(j + 1), w_0T_ast(j + 2), phi, tau, alpha)
+              println(c_0T_ast(j+1))
             }
+            println(w_0T_ast(j+1))
             w_0T_ast(j + 1) = update_w_t_ast(c_0T_ast(j + 1), c_0T_ast(j), w_0T_ast(j + 1), w_0T(j + 1), phi, tau, alpha)
+            println(w_0T_ast(j+1))
           }
           /*
           alpha_p = Uniform(alpha - delta_alpha, alpha + delta_alpha).sample(1)(0)
@@ -103,10 +121,10 @@ object Sample_Graph{
           }*/
           alpha_prop = alpha*math.exp(delta_alpha*Gaussian(0,1).sample(1)(0))
 
-          if ((1 until w_0T.length).map(v => Gamma(c_0T(v - 1).values.sum + c_0T_ast(v - 1) + alpha_prop, tau + phi).logPdf(w_0T(v).values.sum + w_0T_ast(v))-
-            Gamma(c_0T(v - 1).values.sum + c_0T_ast(v - 1) + alpha, tau + phi).logPdf(w_0T(v).values.sum + w_0T_ast(v))).sum+math.log(alpha_prop)-math.log(alpha) > math.log(nextDouble)
+          if ((1 until w_0T.length).map(v => Gamma(c_0T(v - 1).values.sum + c_0T_ast(v - 1) + alpha_prop, 1/(tau + phi)).logPdf(w_0T(v).values.sum + w_0T_ast(v))-
+            Gamma(c_0T(v - 1).values.sum + c_0T_ast(v - 1) + alpha, 1/(tau + phi)).logPdf(w_0T(v).values.sum + w_0T_ast(v))).sum+math.log(alpha_prop)-math.log(alpha) > math.log(nextDouble)
           ) {
-            alpha = alpha_prop
+            if(alpha_prop<1e7){alpha = alpha_prop}
           }
           phi_prop = phi * math.exp(delta_phi * Gaussian(0, 1).sample(1)(0))
           tau_prop = tau * math.exp(delta_tau * Gaussian(0, 1).sample(1)(0))
@@ -130,19 +148,26 @@ object Sample_Graph{
             BigDecimal(v)
           }) .sum -
               cond_wt_ast(w_0T_ast(v + 1), w_0T_ast(v), phi, tau, alpha)
-          }.sum*/ math.log(phi_prop) - math.log(phi) + math.log(tau_prop) - math.log(tau)+prior_tau.logPdf(tau_prop)-prior_tau.logPdf(tau)+prior_alpha.logPdf(alpha_prop)-prior_alpha.logPdf(alpha)
+          }.sum*/ math.log(phi_prop) - math.log(phi) + math.log(tau_prop) - math.log(tau)+prior_tau.logPdf(tau_prop)-prior_tau.logPdf(tau)+prior_phi.logPdf(phi_prop)-prior_phi.logPdf(phi)
           printf("hyper:" +logr.toString+" %n")
 
           //if ((1 until w_0T.length - 1).map(v=>cond_wt1(w_0T(v + 1), w_0T(v), phi_prop, tau_prop).count(_.isInfinity)).sum !=0 ){break}
           if (logr.toDouble > math.log(nextDouble)) {
-            phi = phi_prop
-            tau = tau_prop
+            if(phi_prop<100) {
+              phi = phi_prop
+              tau = tau_prop
+            }
           }
           val pw_hyper = new PrintWriter(new FileWriter("hyper.txt", true))
           pw_hyper.write(Array(phi, tau, alpha).mkString(" "))
           pw_hyper.write(String.format("%n"))
           pw_hyper.close()
-          n_t(i) = update_n(networks(i), n_t(i), networks(0).keys.map(v => (v, 0)).toMap, networks(0).keys.map(v => (v, 0)).toMap, rho, w_0T(i + 1), networks(0).keys.map(v => (v, 0)).toMap,sc)
+          print("\n")
+          print(n_t(i).filter(v=>v._2!=0).toList.sortWith(_._2>_._2).slice(0,20))
+          n_t(i) = update_n(networks(i), n_t(i), networks(0).keys.map(v => (v, 0)).toMap, networks(0).keys.map(v => (v, 0)).toMap, rho, w_0T(i + 1), networks(0).keys.map(v => (v, 0)).toMap,sc,alpha,tau)
+          print("\n")
+          print(n_t(i).filter(v=>v._2!=0).toList.sortWith(_._2>_._2).slice(0,20))
+          print("\n")
         }
         }
         for (k <- (0 until w_0T.length - 1)) {
@@ -163,12 +188,21 @@ object Sample_Graph{
         pw_c.write(String.format("%n"))
         pw_c.close()
       }
+        for (k <- (0 until n_t.length)) {
+          val pw_n = new PrintWriter(new FileWriter("num" + k.toString + ".txt", true))
+          n_t(k).foreach { v =>
+            pw_n.write(v._1.toString + ":" + v._2.toString)
+            pw_n.write(" ")
+          }
+          pw_n.write(String.format("%n"))
+          pw_n.close()
+      }
     }
   }
-//sc.parallelize(n_t(0).keys.toList,1000).map(v=>List(v._1->(n_t(0).filter(vv=>vv._1._1==v._1).values.sum+n_t(0).filter(vv=>vv._1._2 == v._1).values.sum)).toMap).reduce(_++_)
+//sc.parallelize(n_t(0).keys.toList,1000).map(v=>List(v._1->(n_t(0).filter(vv=>vv._1._1==v._1).values.sum+n_t(0).filter(vv=>vv._1._2 == v._                                                                                                                                                                                                                                                                                                                                               1).values.sum)).toMap).reduce(_++_)
 
   def update_wt(D_t:Map[(Int,Int),Int],w_t:Map[Int,Double],w_t_ast:Double,c_t:Map[Int,Int],
-                c_t_1:Map[Int,Int],tau:Double,phi:Double,L:Int,eps:Double,sc:SparkContext): Map[Int,Double] ={
+                c_t_1:Map[Int,Int],tau:Double,phi:Double,L:Int,eps:Double,sc:SparkContext,alpha:Double): Map[Int,Double] ={
     val numpart = 300
     val D_tt = sc.parallelize(D_t.toList,8)
     val tmp_mt = sc.parallelize(w_t.toList,8).cogroup(D_tt.map(v=>(v._1._1,v._2)),D_tt.map(v=>(v._1._2,v._2)))
@@ -178,7 +212,7 @@ object Sample_Graph{
     val w_tp = sc.parallelize(w_t.toList,numpart)
     val K = w_t.values.toArray.length
     val p = sc.parallelize(w_t.keys.toList,numpart).map(v=>(v,Gaussian(0,1).sample(1)(0)))
-    val grad_0 = sc.parallelize(w_t.keys.toList,numpart).map(v=>(v,grad_U(v,m_t(v),c_t(v),c_t_1(v),tau,phi,w_t,w_t_ast)))
+    val grad_0 = sc.parallelize(w_t.keys.toList,numpart).map(v=>(v,grad_U(v,m_t(v),c_t(v),c_t_1(v),tau,phi,w_t,w_t_ast,alpha)))
     val tmp = p.cogroup(grad_0)
     //print(w_t.keys.toList.map(v=>(v,grad_U(v,m_t(v),c_t(v),c_t_1(v),tau,phi,w_t,w_t_ast))))
     val pprop = tmp.map(v=>(v._1,v._2._1.toList(0)+eps/2*v._2._2.toList(0)))
@@ -188,17 +222,17 @@ object Sample_Graph{
       if (i==L-1){
         val wprop_last = s.map(v=>(v._1,math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0))))
         val tmp2 = wprop_last.map(vv=>List(vv._1->vv._2).toMap).reduce(_++_)
-        val grad_last = wprop_last.map(v=> (v._1,grad_U(v._1,m_t(v._1),c_t(v._1),c_t_1(v._1),tau,phi,tmp2,w_t_ast)))
+        val grad_last = wprop_last.map(v=> (v._1,grad_U(v._1,m_t(v._1),c_t(v._1),c_t_1(v._1),tau,phi,tmp2,w_t_ast,alpha)))
         val pprop_last = s.map(v=>(v._1,v._2._1.toList(0))).cogroup(grad_last).map(v=> (v._1,-(v._2._1.toList(0)+v._2._2.toList(0)*eps/2)))
         pprop_last.cogroup(wprop_last)
       }else{
         val wprop_l = s.map(v=>(v._1,math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0))))
-        s.map(v=>(eps*v._2._1.toList(0),v._2._2.toList(0),math.exp(eps*v._2._1.toList(0)+math.log(v._2._2.toList(0))))).sortBy(v=> -v._2).take(10).foreach(print)
-        print("\n")
+        //s.map(v=>(eps*v._2._1.toList(0),v._2._2.toList(0),math.exp(eps*v._2._1.toList(0)+math.log(v._2._2.toList(0))))).sortBy(v=> -v._2).take(10).foreach(print)
+       // print("\n")
         //wprop_l.sortBy(v=> -v._2).take(1000).foreach(print)
         //print("\n")
         val tmp2= wprop_l.map(vv=>List(vv._1->vv._2).toMap).reduce(_++_)
-        val grad_l = wprop_l.map(v=> (v._1,grad_U(v._1,m_t(v._1),c_t(v._1),c_t_1(v._1),tau,phi,tmp2,w_t_ast)))
+        val grad_l = wprop_l.map(v=> (v._1,grad_U(v._1,m_t(v._1),c_t(v._1),c_t_1(v._1),tau,phi,tmp2,w_t_ast,alpha)))
         val pprop_l = s.map(v=>(v._1,v._2._1.toList(0))).cogroup(grad_l).map(v=> (v._1,v._2._1.toList(0)+v._2._2.toList(0)*eps))
         //pprop_l.sortBy(v=> - v._2).take(1000).foreach(print)
         //print("\n")
@@ -208,22 +242,38 @@ object Sample_Graph{
         pprop_l.cogroup(wprop_l)
       }
     }
+    print("\n")
+    print(ret_prep.map(v=>v._2._2.toList(0) == 0.0).collect.toList.count(_==true))
+    print("\n")
+    print(w_tp.map(v=>v._2==0.0).collect.toList.count(_ == true))
+    print("\n")
     //ret_prep.map(v=>v._2._2.toList(0)).take(5).foreach(println)
+
     val pprop_next = ret_prep.map(v=>(v._1,v._2._1.toList(0)))
-    val logr = ret_prep.map(v=> (m_t(v._1)+c_t(v._1)+c_t_1(v._1))*(math.log(v._2._2.toList(0))-math.log(w_t(v._1)))).fold(0)(_+_)-
-      ((ret_prep.cogroup(w_tp).map(v=>v._2._1.toList(0)._2.toList(0)+v._2._2.toList(0)).fold(0)(_+_)+2*w_t_ast)*
-        (ret_prep.cogroup(w_tp).map(v=>v._2._2.toList(0)-v._2._1.toList(0)._2.toList(0)).fold(0)(_+_)))-
+    val logr = ret_prep.map(v=> (m_t(v._1)+c_t(v._1)+c_t_1(v._1))*(math.log(v._2._2.toList(0))-math.log(w_t(v._1)))).filter(v=>v.isNaN !=true).fold(0){(l,r)=>
+      val tmp = if(r.isNegInfinity){Double.MinValue*1e10}else if(r.isPosInfinity){Double.MaxValue*1e-10}else{r}
+      l+tmp}-
+      ((ret_prep.cogroup(w_tp).map(v=>v._2._1.toList(0)._2.toList(0)+v._2._2.toList(0)).filter(v=>v.isNaN !=true).fold(0)(_+_)+2*w_t_ast)*
+        (ret_prep.cogroup(w_tp).map(v=>v._2._2.toList(0)-v._2._1.toList(0)._2.toList(0)).filter(v=>v.isNaN !=true).fold(0)(_+_)))-
     //math.pow(ret_prep.map(v=>v._2._2.toList(0)).reduce((l,r) =>safeadd(l,r))+w_t_ast,2)
     //+math.pow(w_tp.map(v=>v._2).reduce((l,r) =>safeadd(l,r))+w_t_ast,2)-
-     (2*phi+tau)*(ret_prep.map(v=>v._2._2.toList(0)).fold(0)(_+_)+w_tp.map(v=>v._2).fold(0)(_+_))-
-      pprop_next.cogroup(p).map(v=>(v._2._1.toList(0)-v._2._2.toList(0))*(v._2._1.toList(0)+v._2._2.toList(0))).fold(0)(_+_)/2
+     (2*phi+tau)*(ret_prep.map(v=>v._2._2.toList(0)).filter(v=>v.isNaN !=true).fold(0)(_+_)+w_tp.map(v=>v._2).filter(v=>v.isNaN !=true).fold(0)(_+_))-
+      pprop_next.cogroup(p).map(v=>(v._2._1.toList(0)-v._2._2.toList(0))*(v._2._1.toList(0)+v._2._2.toList(0))).filter(v=>v.isNaN !=true).fold(0)(_+_)/2
     //val hoge = ret_prep.map(v=> (m_t(v._1)+c_t(v._1)+c_t_1(v._1))*(math.log(v._2._2.toList(0))-math.log(w_t(v._1)))).filter(v=>v.isNaN !=true)
     print(ret_prep.map(v=> (m_t(v._1)+c_t(v._1)+c_t_1(v._1))*(math.log(v._2._2.toList(0))-math.log(w_t(v._1)))).filter(v=>v.isNaN !=true).fold(0)(_+_))
     printf(" ")
-    print((ret_prep.cogroup(w_tp).map(v=>v._2._2.toList(0)-v._2._1.toList(0)._2.toList(0)).filter(v=>v.isNaN !=true).fold(0)(_+_)))
+    print((ret_prep.cogroup(w_tp).map(v=>v._2._1.toList(0)._2.toList(0)+v._2._2.toList(0)).fold(0)(_+_)+2*w_t_ast))
     printf("  ")
-    print(ret_prep.cogroup(w_tp).map(v=>v._2._1.toList(0)._2.toList(0)+v._2._2.toList(0)).filter(v=>v.isNaN !=true).fold(0)(_+_)+2*w_t_ast)
+    print(ret_prep.map(v=> (m_t(v._1)+c_t(v._1)+c_t_1(v._1))*(math.log(v._2._2.toList(0))-math.log(w_t(v._1)))).filter(v=>v.isNaN !=true).fold(0){(l,r)=>
+      val tmp = if(r.isNegInfinity){Double.MinValue*1e10}else if(r.isPosInfinity){Double.MaxValue*1e-10}else{r}
+      l+tmp})
+    printf(" ")
+    print((ret_prep.cogroup(w_tp).map(v=>v._2._2.toList(0)-v._2._1.toList(0)._2.toList(0)).fold(0)(_+_)))
     printf(" w_ts:"+logr.toString+" \n")
+    val pw_w = new PrintWriter(new FileWriter("w_accept.txt", true))
+    pw_w.write(logr.toString)
+    pw_w.write(String.format("%n"))
+    pw_w.close()
     //print(logr)
     //val grad_0 = sc.parallelize(w_t.keys.toList,30).map(v=>List(v->grad_U(v,m_t(v),c_t(v),c_t_1(v),tau,phi,w_t,w_t_ast)).toMap)
     /*
@@ -317,13 +367,14 @@ object Sample_Graph{
    else l*(1+math.exp(math.log(r)-math.log(l)))
  }
   def grad_U(idx:Int,m_i:Int,c_t:Int,c_t_1:Int,tau:Double,phi:Double,
-             w_t:Map[Int,Double],w_t_ast:Double): Double ={
-    val out = (c_t+c_t_1+m_i)-w_t(idx)*(tau+2*phi+2*w_t.values.sum+2*w_t_ast)
-    return out
+             w_t:Map[Int,Double],w_t_ast:Double,alpha:Double): Double ={
+    val out = (c_t+c_t_1+m_i)-w_t(idx)*(tau+2*phi+2*math.exp(-alpha*math.log(1+1/tau))*w_t.values.sum+2*w_t_ast)
+    return -out
   }
   def update_ct(D_t:Map[(Int,Int),Int],D_t1:Map[(Int,Int),Int],w_t:Map[Int,Double],w_t1:Map[Int,Double],w_t_ast:Double,
                 w_t1_ast:Double,c_t:Map[Int,Int], c_t1:Map[Int,Int],c_tm1:Map[Int,Int],tau:Double,phi:Double,L:Int,
-                eps:Double,sc:SparkContext): Map[Int,Int]={
+                eps:Double,sc:SparkContext): (Map[Int,Int],Map[Int,Double])={
+    var w_new = Map[Int,Double]()
     val numpart = 8
     val D_tt = sc.parallelize(D_t.toList,numpart)
     val tmp_mt = sc.parallelize(w_t.toList,numpart).cogroup(D_tt.map(v=>(v._1._1,v._2)),D_tt.map(v=>(v._1._2,v._2)))
@@ -333,42 +384,54 @@ object Sample_Graph{
     //val m_t = D_t.keys.map(v=>(v._1,D_t.filter(vv=>vv._1._1==v._1).values.sum+D_t.filter(vv=>vv._1._2 == v._1).values.sum)).toMap
     val present = D_t.filter(v=>v._2!=0).keys.map(v=>v._1).toSet.union(D_t.filter(v=>v._2!=0).keys.map(v=>v._2).toSet).toArray
     val nonzero_w = present.map(v=>(v,w_t1(v))).toMap.filter(v=>v._2!=0).keys.toArray
-    val cprop = nonzero_w.map(v=>(v,zpois(phi*w_t(v)))).toMap
-    val r1 = nonzero_w.map(v=>(v,math.log(Gamma(cprop(v),tau+phi).pdf(w_t1(v)))-
-      math.log(Gamma(c_t(v),tau+phi).pdf(w_t1(v))))).toMap
+    val cprop = nonzero_w.map(v=>(v,Poisson(phi*w_t(v)).sample(1)(0)+1)).toMap
+    val r1 = nonzero_w.map(v=>(v,math.log(Gamma(cprop(v),1/(tau+phi)).pdf(w_t1(v)))-
+      math.log(Gamma(c_t(v),1/(tau+phi)).pdf(w_t1(v))))).toMap
     var c_new = nonzero_w.foldLeft(c_t)((s,i)=>if(math.log(nextDouble)<r1(i)){s+(i->cprop(i))}else{s})
 
     val zero_w = present.map(v=>(v,w_t1(v))).toMap.filter(v=>v._2==0).keys.toArray
     c_new = zero_w.foldLeft(c_new)((s,i)=>if(nextDouble<1/(1+phi*w_t(i)*(tau+phi))){s+(i->0)}else{s+(i->1)})
-
+    println(zero_w.length)
     //joint sampling
     val R = w_t1.values.sum+w_t1_ast+zero_w.map(v=>w_t1(v)).sum
     val tmp = joint_update(zero_w.map(v=>(v,c_t(v))).toMap,zero_w.map(v=>(v,c_t1(v))).toMap,
                            zero_w.map(v=>(v,w_t(v))).toMap,zero_w.map(v=>(v,w_t1(v))).toMap,
                            phi,tau,w_t1_ast,R)
-    c_new = tmp.foldLeft(c_new)((s,i)=> s+(i._1->i._2))
 
+    c_new = tmp._1.foldLeft(c_new)((s,i)=> s+(i._1->i._2))
+    w_new = tmp._2.foldLeft(w_new)((s,i)=> s+(i._1->i._2))
     //rev joint sampling
+    /*
     val zero_w_rev = present.map(v=>(v,w_t(v))).toMap.filter(v=>v._2==0).keys.toArray
     val R_rev = w_t.values.sum+w_t_ast+zero_w_rev.map(v=>w_t(v)).sum
-    val tmp_2 = joint_update(zero_w_rev.map(v=>(v,c_t(v))).toMap,zero_w.map(v=>(v,c_tm1(v))).toMap,
-      zero_w.map(v=>(v,w_t1(v))).toMap,zero_w.map(v=>(v,w_t(v))).toMap,
+    val tmp_2 = joint_update(zero_w_rev.map(v=>(v,c_t(v))).toMap,zero_w_rev.map(v=>(v,c_tm1(v))).toMap,
+      zero_w_rev.map(v=>(v,w_t1(v))).toMap,zero_w_rev.map(v=>(v,w_t(v))).toMap,
       phi,tau,w_t_ast,R_rev)
-    c_new = tmp_2.foldLeft(c_new)((s,i)=> s+(i._1->i._2))
-    return c_new
+    c_new = tmp_2._1.foldLeft(c_new)((s,i)=> s+(i._1->i._2))
+    w_new = tmp_2._2.foldLeft(w_new)((s,i)=> s+(i._1->i._2))
+    */
+    return (c_new,w_new)
   }
-  def joint_update(c_t:Map[Int,Int],c_t1:Map[Int,Int],w_t:Map[Int,Double],w_t1:Map[Int,Double],phi:Double,
-                   tau:Double,w_t1_ast:Double,R:Double): Map[Int,Int] ={
-    val cprop = w_t.map(v=>(v._1,Poisson(phi*v._2).sample(1)(0)))
-    val wprop = cprop.map(v=>(v._1,if(v._2 ==0){0.0}else{Gamma(c_t(v._1),phi+tau).sample(1)(0)}))
-    val r = wprop.keys.map(v=>(v,(cprop(v)-c_t(v)+c_t1(v))*math.log(wprop(v))+
-      (cprop(v)-c_t(v)+c_t1(v))*math.log(w_t1(v))+(2*cprop(v)-2*c_t(v))*math.log(phi+tau)-
-       math.pow(w_t1(v),2)-math.pow(wprop(v),2)+(2*R+phi)*(wprop(v)-w_t1(v))+
-      (2*logGamma(c_t(v))-2*logGamma(cprop(v))))).toMap
-    val (cnew,wnew)= r.foldLeft((c_t,w_t1)){(s,i)=>
+  def joint_update(c_t_z:Map[Int,Int],c_t1_z:Map[Int,Int],w_t_z:Map[Int,Double],w_t1_z:Map[Int,Double],phi:Double,
+                   tau:Double,w_t1_ast:Double,R:Double): (Map[Int,Int],Map[Int,Double]) ={
+    print(w_t_z.slice(0,20))
+    val cprop = w_t_z.map(v=>(v._1,Poisson(phi*v._2).sample(1)(0)))
+    val wprop = cprop.map(v=>(v._1,if(v._2 ==0){0.0}else{Gamma(cprop(v._1),1/(phi+tau)).sample(1)(0)}))
+    //println(cprop.keys.toList.slice(0,10))
+    //println(wprop.keys.toList.slice(0,10))
+    val r = wprop.keys.toList.map(v=>(v,(cprop(v)-c_t_z(v)+c_t1_z(v))*math.log(wprop(v))-
+      (cprop(v)-c_t_z(v)+c_t1_z(v))*math.log(w_t1_z(v))+(2*cprop(v)-2*c_t_z(v))*math.log(phi+tau)-
+       math.pow(w_t1_z(v),2)-math.pow(wprop(v),2)+(2*(R-w_t1_z(v))+phi)*(wprop(v)-w_t1_z(v)))).toMap//+
+      //(2*logGamma(c_t_z(v))-2*logGamma(cprop(v))))).toMap
+    val (cnew,wnew)= r.foldLeft((c_t_z,w_t1_z)){(s,i)=>
       if(math.log(nextDouble)<i._2){(s._1+(i._1->cprop(i._1)),s._2+(i._1->wprop(i._1)))}
-    else{(s._1+(i._1->c_t(i._1)),s._2+(i._1->w_t1(i._1)))}}
-    return cnew
+    else{if (i._2.isNaN){(s._1+(i._1->0),s._2+(i._1->0.0))}else{(s._1+(i._1->c_t_z(i._1)),s._2+(i._1->w_t1_z(i._1)))}}}
+    //print("\n")
+    //print(r.slice(0,20))
+    //print("\n")
+    //print((r zip wnew).filter(i=>i._1._2.isNaN != true).map(v=>v._2).slice(0,10))
+    //print("\n")
+    return (cnew,wnew)
   }
   def zpois(lamb:Double): Int ={
   if (lamb<1e-5){return 1}
@@ -384,10 +447,13 @@ object Sample_Graph{
     }
   }
   def update_n(Z_t:Map[(Int,Int),Int],n_t_new:Map[(Int,Int),Int],n_t_old:Map[(Int,Int),Int],
-               n_t_1:Map[(Int,Int),Int],rho:Double, w_t:Map[Int,Double],n_t1_old:Map[(Int,Int),Int],sc:SparkContext): Map[(Int,Int),Int] ={
-    val ret = sc.parallelize(n_t_new.toList,30).join(sc.parallelize(n_t_old.toList,30)).map(v=>List(v._1->v._2).toMap).fold(List(n_t_new.head._1->(0,0)).toMap) { (s, i) =>
+               n_t_1:Map[(Int,Int),Int],rho:Double, w_t:Map[Int,Double],n_t1_old:Map[(Int,Int),Int],sc:SparkContext,alpha:Double,tau:Double): Map[(Int,Int),Int] ={
+    val g_t = math.exp(-alpha*math.log(1+1/tau))
+    val ret = sc.parallelize(n_t_new.toList,1000).join(sc.parallelize(n_t_old.toList,1000)).map(v=>List(v._1->v._2).toMap).map{ i =>
+      val return_val =
       if (Z_t(i.keys.toList(0)) == 0) {
-        s + (i.keys.toList(0) -> (0, 0))
+        val tmp = List(i.keys.toList(0) -> (0, 0)).toMap
+        tmp
       }
       else {
         val ret_old = if (n_t_1(i.keys.toList(0)) == 0) {
@@ -396,9 +462,9 @@ object Sample_Graph{
           Binomial(n_t_1(i.keys.toList(0)), math.exp(-rho)).sample(1)(0)
         }
         val ret_new = if (ret_old == 0) {
-          Poisson(2 * w_t(i.keys.toList(0)._1) * w_t(i.keys.toList(0)._2)).sample(1)(0)+1
+          Poisson(2 * g_t*w_t(i.keys.toList(0)._1) * w_t(i.keys.toList(0)._2)).sample(1)(0)+1
         } else {
-          Poisson(2 * w_t(i.keys.toList(0)._1) * w_t(i.keys.toList(0)._2)).sample(1)(0)
+          Poisson(2 * g_t*w_t(i.keys.toList(0)._1) * w_t(i.keys.toList(0)._2)).sample(1)(0)
         }
         val n_prop = ret_old + ret_new
         val n_prev = i.values.toList(0)._1 + i.values.toList(0)._2
@@ -406,13 +472,19 @@ object Sample_Graph{
 
         val logr = (1 to n_prop).map(math.log(_)).sum - (1 to n_prev).map(math.log(_)).sum + (n_prop - n_prev) * math.log(1 - math.exp(-rho)) +
           (1 to (n_prev - n_t1_old(i.keys.toList(0)))).map(v => math.log(v)).sum - (1 to (n_prop - n_t1_old(i.keys.toList(0)))).map(v => math.log(v)).sum
-        if (logr > math.log(nextDouble)) {
-          s + (i.keys.toList(0) -> (ret_new, ret_old))
+        //print("\n")
+        //printf("n_logr: "+logr.toString+" "+i.values.toList(0)._1.toString+":"+ret_new.toString)
+        //print("\n")
+        val tmp = if (logr > math.log(nextDouble)) {
+          List(i.keys.toList(0) -> (ret_new, ret_old)).toMap
           } else {
-          s + (i.keys.toList(0) -> (i.values.toList(0)._1, i.values.toList(0)._2))
+          List(i.keys.toList(0) -> (i.values.toList(0)._1, i.values.toList(0)._2)).toMap
           }
+        tmp
         }
-      }
+       return_val
+      }.reduce(_++_)
+    val ret_val = ret.map(v=>(v._1,v._2._1))
     return ret.map(v=>(v._1,v._2._1))
   }
     /*
@@ -439,7 +511,7 @@ object Sample_Graph{
   def update_c_t_ast(c_t_ast:Int,w_t_ast:Double,w_t1_ast:Double,phi:Double,tau:Double,alpha:Double): Int ={
     val c_prop = Poisson(phi*w_t_ast).sample(1)(0)
     val logr = (c_prop-c_t_ast)*math.log((phi+tau)*w_t1_ast)+logGamma(alpha+c_t_ast)-logGamma(alpha+c_prop)
-    printf("c_t_ast:"+logr.toString," ")
+    //printf("c_t_ast:"+logr.toString," ")
     if(logr>math.log(nextDouble)){
       return c_prop
     }else{
@@ -447,9 +519,11 @@ object Sample_Graph{
   }
   def update_w_t_ast(c_t_ast:Int,c_t_1_ast:Int,w_t_ast:Double,w_t:Map[Int,Double],
                      phi:Double,tau:Double,alpha:Double): Double ={
-    val w_prop = Gamma(alpha+c_t_1_ast+c_t_ast,tau+2*phi+2*w_t.values.sum+w_t_ast).sample(1)(0)
-    val logr = math.pow(w_t_ast,2)-math.pow(w_prop,2)+(alpha+c_t_1_ast+c_t_1_ast)*
-      (math.log(tau+2*phi+2*w_t.values.sum+w_prop)-math.log(tau+2*phi+2*w_t.values.sum+w_t_ast))
+    val gam_t = math.exp(-alpha*math.log(1+1/tau))
+    val w_prop = Gamma(alpha+c_t_1_ast+c_t_ast,1/(tau+2*phi+2*gam_t*w_t.values.sum+gam_t*w_t_ast)).sample(1)(0)
+    val logr = gam_t*(math.pow(w_t_ast,2)-math.pow(w_prop,2))+(alpha+c_t_ast+c_t_1_ast)*
+      (math.log(tau+2*phi+2*gam_t*w_t.values.sum+gam_t*w_prop)-math.log(tau+2*phi+2*gam_t*w_t.values.sum+gam_t*w_t_ast))
+    printf("\n"+"w_tast:"+logr.toString+":"+math.exp(logr).toString+"\n")
     if(logr>math.log(nextDouble)){
       return w_prop
     }else{w_t_ast}
