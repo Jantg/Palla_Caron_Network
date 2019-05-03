@@ -21,7 +21,7 @@ object Sample_Graph{
     val niter = 100000
     val data = Source.fromFile("/home/jan/Downloads/temporaledges.txt").getLines.toArray
     val T = data.map(v => v.split(" ")(3).toInt).max
-    val maxtime = 10
+    val maxtime = 7
     val all_states = data.filter(v=>v.split(" ")(3).toInt <(maxtime+1)).map(v => (v.split(" ")(0).toInt, v.split(" ")(1).toInt))
     val nodes = all_states.map(v => Set(v._1, v._2)).reduce(_.union(_)).toList
     val K = nodes.length
@@ -39,12 +39,12 @@ object Sample_Graph{
     //val T = networks.length
     //val K = networks(0).keys.map(_._1).max+1
     //.slice(0, maxtime)
-    val prior_alpha = new Gamma(100000000, 0.00000001)
-    val prior_tau = new Gamma(100, 0.01)
-    val prior_phi = new Gamma(100, 0.01)
-    val delta_alpha = 0.1
-    val delta_phi = 0.5
-    val delta_tau = 0.5
+    val prior_alpha = new Gamma(1000, 0.001)
+    val prior_tau = new Gamma(0.1, 1/0.1)
+    val prior_phi = new Gamma(0.1, 1/0.1)
+    val delta_alpha = 3.0
+    val delta_phi = 2.0
+    val delta_tau = 2.0
 
    Logger.getLogger("org").setLevel(Level.OFF)
    Logger.getLogger("akka").setLevel(Level.OFF)
@@ -61,7 +61,7 @@ object Sample_Graph{
     var alpha_p = alpha
     var alpha_prop = alpha
     val L = 5
-    val eps = 3e-3
+    val eps = 1e-4
     val w_0 = nodes.map(v => (v, 10*nextDouble)).toMap
     val w_0_ast = nextDouble*10.0
     var iter = 1
@@ -70,10 +70,10 @@ object Sample_Graph{
       iter = iter + 1
       //val c_t = s._1(i).map(v => (v._1, zpois(phi * nextDouble*5.0)))
       //val c_t = s._1(i).map(v => (v._1, Poisson(phi * v._2).sample(1)(0)))
-      val c_t = nodes.map(v=>(v, 10)).toMap
+      val c_t = nodes.map(v=>(v, 1)).toMap
       //val c_t = s._1(i).map(v=>(v._1,Poisson(phi*v._2).sample(1)(0)+1))
      //val w_t1 = c_t.map(v =>(v._1, if (v._2 != 0) {Gamma(v._2, 1/(tau + phi)).sample(1)(0)}else{0.0}))
-      val w_t1 = nodes.map(v => (v, 10*nextDouble)).toMap
+      val w_t1 = nodes.map(v => (v, 1*nextDouble)).toMap
      //val w_t1 = c_t.map(v =>(v._1, Gamma(v._2+0.1, 1/(tau + phi)).sample(1)(0)))
       //val w_t1 = nodes.map(v => (v, 5.0*nextDouble*Binomial(1,0.3).sample(1)(0))).toMap
       (s._1 :+ w_t1, s._2 :+ c_t)
@@ -121,10 +121,14 @@ object Sample_Graph{
           } else {
             alpha_prop = alpha_p
           }*/
-          alpha_prop = alpha*math.exp(delta_alpha*Gaussian(0,1).sample(1)(0))
-
-          if ((1 until w_0T.length).map(v => Gamma(c_0T(v - 1).values.sum + c_0T_ast(v - 1) + alpha_prop, 1/(tau + phi)).logPdf(w_0T(v).values.sum + w_0T_ast(v))-
-            Gamma(c_0T(v - 1).values.sum + c_0T_ast(v - 1) + alpha, 1/(tau + phi)).logPdf(w_0T(v).values.sum + w_0T_ast(v))).sum+math.log(alpha_prop)-math.log(alpha) > math.log(nextDouble)
+          //val alpha_tmp = Uniform(alpha-delta_alpha,alpha+delta_alpha).sample(1)(0)
+          alpha_prop = alpha*math.exp(delta_alpha*Gaussian(0,1).sample(1)(0))//if (alpha_tmp<0){math.abs(alpha_tmp)}else if(alpha_tmp>10){20-alpha_tmp}else{alpha_tmp}
+          if(alpha_prop>1e5){alpha=alpha}
+          else if ((1 until w_0T.length).map{v =>
+            val tmp = c_0T(v - 1).values.sum + c_0T_ast(v - 1) + alpha_prop
+            val csum = if(tmp<0){Int.MaxValue}else{tmp}
+            Gamma(csum, 1/(tau + phi)).logPdf(w_0T(v).values.sum + w_0T_ast(v))-
+            Gamma(csum, 1/(tau + phi)).logPdf(w_0T(v).values.sum + w_0T_ast(v))}.sum+math.log(alpha_prop)-math.log(alpha) > math.log(nextDouble)
           ) {
             alpha = alpha_prop
           }
@@ -217,7 +221,7 @@ object Sample_Graph{
     val numpart = 24
     val D_tt = D_t //sc.parallelize(D_t.toList,8)
     val tmp_mt = sc.parallelize(w_t.toList,24).cogroup(D_tt.map(v=>(v._1._1,v._2)),D_tt.map(v=>(v._1._2,v._2)))
-    val m_t = tmp_mt.map(v=>List(v._1->(v._2._2.toList.sum+v._2._3.toList.sum)).toMap).reduce(_++_)
+    val m_t = tmp_mt.map(v=>List(v._1->(v._2._2.toList.sum+v._2._3.toList.sum)).toMap).treeReduce(_++_,3)
    // val m_t = sc.parallelize(w_t.keys.toList,30).map(v=>List(v->(D_t.filter(vv=>vv._1._1==v).values.sum+D_t.filter(vv=>vv._1._2 == v).values.sum)).toMap).reduce(_++_)
     //val m_t = D_t.keys.map(v=>(v._1,D_t.filter(vv=>vv._1._1==v._1).values.sum+D_t.filter(vv=>vv._1._2 == v._1).values.sum)).toMap
     val w_tp = sc.parallelize(w_t.toList,numpart)
@@ -231,13 +235,15 @@ object Sample_Graph{
     //w_tp.take(10).foreach(println)
     val ret_prep = (0 until L).foldLeft(pprop.cogroup(w_tp)){(s,i)=>
       if (i==L-1){
-        val wprop_last = s.map(v=>(v._1,math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0))))
+        val wprop_last = s.map(v=>(v._1,if (math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0)).isNaN || math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0)).isInfinite){v._2._2.toList(0)}else{math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0))}))
+        //wprop_last.take(5).foreach(print)
+        //print("\n")
         val tmp2 = wprop_last.map(vv=>List(vv._1->vv._2).toMap).reduce(_++_)
         val grad_last = wprop_last.map(v=> (v._1,grad_U(v._1,m_t(v._1),c_t(v._1),c_t_1(v._1),tau,phi,tmp2,w_t_ast,alpha)))
         val pprop_last = s.map(v=>(v._1,v._2._1.toList(0))).cogroup(grad_last).map(v=> (v._1,-(v._2._1.toList(0)+v._2._2.toList(0)*eps/2)))
         pprop_last.cogroup(wprop_last)
       }else{
-        val wprop_l = s.map(v=>(v._1,math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0))))
+        val wprop_l = s.map(v=>(v._1,if (math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0)).isNaN || math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0)).isInfinite){v._2._2.toList(0)}else{math.exp(math.log(v._2._2.toList(0))+eps*v._2._1.toList(0))}))
         //s.map(v=>(eps*v._2._1.toList(0),v._2._2.toList(0),math.exp(eps*v._2._1.toList(0)+math.log(v._2._2.toList(0))))).sortBy(v=> -v._2).take(10).foreach(print)
        // print("\n")
         //wprop_l.sortBy(v=> -v._2).take(1000).foreach(print)
@@ -402,7 +408,7 @@ object Sample_Graph{
     val numpart = 24
     val D_tt =D_t //sc.parallelize(D_t.toList,numpart)
     val tmp_mt = sc.parallelize(w_t.toList,numpart).cogroup(D_tt.map(v=>(v._1._1,v._2)),D_tt.map(v=>(v._1._2,v._2)))
-    val m_t = tmp_mt.map(v=>List(v._1->(v._2._2.toList.sum+v._2._3.toList.sum)).toMap).reduce(_++_)
+    val m_t = tmp_mt.map(v=>List(v._1->(v._2._2.toList.sum+v._2._3.toList.sum)).toMap).treeReduce(_++_,3)
 
     //val m_t = sc.parallelize(w_t.keys.toList,1000).map(v=>List(v->(D_t.filter(vv=>vv._1._1==v).values.sum+D_t.filter(vv=>vv._1._2 == v).values.sum)).toMap).reduce(_++_)
     //val m_t = D_t.keys.map(v=>(v._1,D_t.filter(vv=>vv._1._1==v._1).values.sum+D_t.filter(vv=>vv._1._2 == v._1).values.sum)).toMap

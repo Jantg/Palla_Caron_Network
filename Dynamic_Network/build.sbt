@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "net.sf.jung" % "jung-graph-impl" % "2.0.1",
   "net.sf.jung" % "jung-algorithms" % "2.0.1",
   "org.apache.commons" % "commons-collections4" % "4.1",
+  "org.apache.commons" % "commons-math3" % "3.6.1",
 // Native libraries are not included by default. add this if you want them (as of 0.7)
   // Native libraries greatly improve performance, but increase jar sizes.
   // It also packages various blas implementations, which have licenses that may or may not
